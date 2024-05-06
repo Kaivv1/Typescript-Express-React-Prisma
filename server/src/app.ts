@@ -6,13 +6,15 @@ import { userRouter } from "./routes/user.route.js";
 import morgan from "morgan";
 import { errorHandler } from "./utils/error-handling.js";
 import cookieParser from "cookie-parser";
+import { client } from "./constants.js";
 
 dotenv.configDotenv();
 const app: Application = express();
+
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:3000",
+    origin: client,
     methods: ["GET", "POST", "PUT", "DELETE", "HEAD", "PATCH"],
   })
 );

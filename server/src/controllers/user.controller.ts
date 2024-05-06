@@ -29,11 +29,11 @@ type SuccessResponse<T = {}> = {
   data?: T | null;
 };
 
-export const register: RequestHandler<{}, {}, BaseUserData> = async function (
+export const register: RequestHandler<{}, {}, BaseUserData> = async (
   req,
   res,
   next
-) {
+) => {
   try {
     const { password } = req.body;
     const hashesPassword: string = await bcryptjs.hash(password, 10);
@@ -52,11 +52,11 @@ export const register: RequestHandler<{}, {}, BaseUserData> = async function (
   }
 };
 
-export const login: RequestHandler<{}, {}, LoginRequest> = async function (
+export const login: RequestHandler<{}, {}, LoginRequest> = async (
   req,
   res,
   next
-) {
+) => {
   try {
     const { email, password } = req.body;
 
@@ -77,7 +77,7 @@ export const login: RequestHandler<{}, {}, LoginRequest> = async function (
     const userId = existingUser.id;
 
     await createJwtToken(userId, "1hr")
-      .then(function (token) {
+      .then((token) => {
         res.cookie("access_token", token, {
           httpOnly: true,
           signed: true,
@@ -106,32 +106,33 @@ export const login: RequestHandler<{}, {}, LoginRequest> = async function (
   }
 };
 
-export const update: RequestHandler<unknown, unknown, UserData> =
-  async function (req, res, next) {
-    try {
-      console.log(req.body);
+export const update: RequestHandler<{}, {}, UserData> = async (
+  req,
+  res,
+  next
+) => {
+  try {
+    const updatedUser = await prisma.user
+      .update({
+        data: {
+          ...req.body,
+        },
+        where: {
+          id: req.body.id,
+        },
+      })
+      .catch((err) => {
+        if (err) return next(createError(500, "Internal Server Error"));
+      });
 
-      const updatedUser = await prisma.user
-        .update({
-          data: {
-            ...req.body,
-          },
-          where: {
-            id: req.body.id,
-          },
-        })
-        .catch((err) => {
-          if (err) return next(createError(500, "Internal Server Error"));
-        });
+    const successResponse: SuccessResponse = {
+      msg: "User updated",
+      success: true,
+      data: updatedUser,
+    };
 
-      const successResponse: SuccessResponse = {
-        msg: "User updated",
-        success: true,
-        data: updatedUser,
-      };
-
-      return res.status(200).json(successResponse);
-    } catch (error) {
-      return next(createError(500, "Internal Server Error"));
-    }
-  };
+    return res.status(200).json(successResponse);
+  } catch (error) {
+    return next(createError(500, "Internal Server Error"));
+  }
+};
