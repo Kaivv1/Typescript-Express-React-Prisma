@@ -1,33 +1,12 @@
+import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
-import { getCookie, removeCookie } from "@/helpers/cookie";
+import { useLogout } from "@/features/auth/useLogout";
 import axios, { AxiosError } from "axios";
-import Cookies from "js-cookie";
 
 const Home = () => {
-  // const csrfToken = Cookies.get("csrf_auth");
-  // console.log(csrfToken);
-  async function login() {
-    await axios
-      .post(
-        "http://localhost:4000/user/login",
-        {
-          email: "newuser@gmail.com",
-          password: "asd1234",
-        },
-        {
-          withCredentials: true,
-        },
-      )
-      .then((res) => {
-        const { token } = res.data.data;
-        Cookies.set("csrf_auth", token);
-      })
-      .catch((err: AxiosError) => console.log(err.response?.data));
-  }
+  const { logout, isLoggingOut } = useLogout();
   async function update() {
-    const token = await getCookie("csrf_auth");
-    console.log(token);
-    await axios
+    axios
       .patch(
         "http://localhost:4000/user/update",
         {
@@ -35,9 +14,6 @@ const Home = () => {
         },
         {
           withCredentials: true,
-          headers: {
-            "x-csrf-token": token,
-          },
         },
       )
       .catch((err: AxiosError) => console.log(err.response?.data));
@@ -45,9 +21,11 @@ const Home = () => {
 
   return (
     <div>
-      <Button onClick={login}>login</Button>
       <Button onClick={update}>update</Button>
-      <Button onClick={() => removeCookie("csrf_auth")}>remove cookie</Button>
+      <Button onClick={async () => {}}>send mail</Button>
+      <Button onClick={() => logout()}>
+        {isLoggingOut ? <Loader size="sm" /> : "logout"}
+      </Button>
     </div>
   );
 };

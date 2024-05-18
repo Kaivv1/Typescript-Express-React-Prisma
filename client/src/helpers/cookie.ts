@@ -4,8 +4,6 @@ type CsrfAuth = "csrf_auth";
 
 type Cookie = CsrfAuth;
 
-// type GetCookieFunc = (name: Cookie) => string | undefined;
-
 type GetCookieFunc = (name: Cookie) => Promise<string | undefined>;
 
 type SetCookieFunc = (
@@ -14,11 +12,6 @@ type SetCookieFunc = (
 ) => Promise<string | undefined>;
 
 type RemoveCookieFunc = (name: Cookie) => void;
-
-// export const getCookie: GetCookieFunc = (name) => {
-//   const tokenCookie = Cookies.get(name);
-//   return tokenCookie;
-// };
 
 export const getCookie: GetCookieFunc = async (name) => {
   return new Promise((resolve, reject) => {

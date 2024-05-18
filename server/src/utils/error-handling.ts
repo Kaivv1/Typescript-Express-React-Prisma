@@ -23,8 +23,8 @@ export const errorHandler: ErrorRequestHandler = function (
   res: Response<CustomErrorResponse>,
   next
 ) {
-  const statusCode = err.statusCode;
-  const msg = err.message;
+  const statusCode = err.statusCode || 500;
+  const msg = err.message || "Internal Server Error";
   const success: boolean = false;
 
   return res.status(statusCode).json({ msg, success, statusCode });

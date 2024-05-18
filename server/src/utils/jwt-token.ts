@@ -1,11 +1,9 @@
-import jwt from "jsonwebtoken";
+import jwt, { VerifyErrors } from "jsonwebtoken";
 
 type CreateJwtToken = (
   id: string,
-  expiration: string
+  expiration: string | number
 ) => Promise<string | undefined>;
-
-const JWT_SECRET = process.env.JWT_SECRET!;
 
 type JwtPayload =
   | {
@@ -14,6 +12,8 @@ type JwtPayload =
   | jwt.JwtPayload;
 
 type VerifyJwtToken = (token: string) => Promise<JwtPayload>;
+
+const JWT_SECRET = process.env.JWT_SECRET!;
 
 export const createJwtToken: CreateJwtToken = async (id, expiration) => {
   return new Promise((resolve, reject) => {
@@ -29,7 +29,7 @@ export const verifyJwtToken: VerifyJwtToken = (token) => {
     jwt.verify(token, JWT_SECRET, (err, decoded) => {
       if (err) {
         console.log(err);
-        return reject(err);
+        return reject(err as VerifyErrors);
       }
       return resolve(decoded as JwtPayload);
     });

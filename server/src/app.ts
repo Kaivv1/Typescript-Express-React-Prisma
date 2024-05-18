@@ -6,7 +6,16 @@ import { userRouter } from "./routes/user.route.js";
 import morgan from "morgan";
 import { errorHandler } from "./utils/error-handling.js";
 import cookieParser from "cookie-parser";
-import { client } from "./constants.js";
+import { client, port } from "./constants.js";
+import session from "express-session";
+import passport from "passport";
+import { PrismaSessionStore } from "@quixo3/prisma-session-store";
+import prisma from "./prisma-client.js";
+import {
+  githubStrategy,
+  googleStrategy,
+} from "./passport/social-strategies.js";
+import { localStrategy } from "./passport/local-strategy.js";
 
 dotenv.configDotenv();
 const app: Application = express();
@@ -19,15 +28,39 @@ app.use(
   })
 );
 
+app.use(
+  session({
+    name: "sess",
+    secret: process.env.COOKIE_SECRET!,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 60 * 60 * 1000,
+      secure: false,
+    },
+    store: new PrismaSessionStore(prisma, {
+      checkPeriod: 30 * 60 * 1000,
+      dbRecordIdIsSessionId: true,
+      dbRecordIdFunction: undefined,
+    }),
+  })
+);
+
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static("static"));
 app.disable("x-powered-by");
 app.use(compression());
 app.use(express.json());
 app.use(morgan("dev"));
-app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(cookieParser());
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(googleStrategy);
+passport.use(githubStrategy);
+passport.use(localStrategy);
 
 app.use("/user", userRouter);
-
-const port = process.env.PORT || 4000;
 
 app.listen(port, () => console.log(`App running on port ${port}`));
 
