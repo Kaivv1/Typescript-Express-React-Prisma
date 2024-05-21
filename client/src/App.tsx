@@ -10,6 +10,9 @@ import { ThemeProvider } from "./components/ThemeProvider";
 import { Toaster } from "./components/ui/toaster";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import Files from "./pages/Files";
+import Starred from "./pages/Starred";
+import Trash from "./pages/Trash";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,6 +30,7 @@ function App() {
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
           <BrowserRouter>
             <Routes>
+              <Route index element={<Home />} />
               <Route
                 element={
                   <ProtectedRoute>
@@ -34,7 +38,9 @@ function App() {
                   </ProtectedRoute>
                 }
               >
-                <Route index element={<Home />} />
+                <Route path="files" element={<Files />} />
+                <Route path="starred" element={<Starred />} />
+                <Route path="trash" element={<Trash />} />
               </Route>
               <Route path="forgot-password" element={<ForgotPassword />} />
               <Route path="reset-password" element={<ResetPassword />} />

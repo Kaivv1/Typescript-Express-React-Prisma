@@ -10,7 +10,7 @@ export const useLogin = () => {
 
   const { mutate: login, isPending: isLogging } = useMutation({
     mutationFn: loginAPI,
-    onSuccess: () => navigate("/", { replace: true }),
+    onSuccess: () => navigate("/dashboard", { replace: true }),
     onError: (error: CustomError) => {
       toast({ title: error.msg, variant: "destructive" });
     },

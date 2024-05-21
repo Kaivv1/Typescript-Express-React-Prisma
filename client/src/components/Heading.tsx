@@ -13,10 +13,10 @@ const Heading: FC<HeadingProps> = ({ as = "h1", className, ...props }) => {
 
   if (as === "h1")
     defaultClassName =
-      "scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl";
+      "scroll-m-20 text-3xl md:text-4xl font-extrabold tracking-tight lg:text-5xl";
   if (as === "h2")
     defaultClassName =
-      "scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0";
+      "scroll-m-20 border-b pb-2 text-2xl lg:text-3xl font-semibold tracking-tight first:mt-0";
   if (as === "h3")
     defaultClassName = "scroll-m-20 text-2xl font-semibold tracking-tight";
   if (as === "h4")

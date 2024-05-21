@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 type AuthError = Error & {
   msg: string;
   access: boolean;
+  text?: string;
 };
 
 export const useAuth = () => {
@@ -17,6 +18,7 @@ export const useAuth = () => {
   return {
     access: data?.access || authError?.access,
     msg: data?.msg || authError?.msg,
+    text: authError?.text,
     isLoading,
   };
 };

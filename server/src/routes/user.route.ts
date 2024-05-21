@@ -7,6 +7,7 @@ import {
   logout,
   forgotPassword,
   resetPassword,
+  user,
 } from "../controllers/user.controller.js";
 import passport from "passport";
 import { client } from "../constants.js";
@@ -24,6 +25,7 @@ userRouter.post(
 );
 userRouter.patch("/update", auth, update);
 userRouter.get("/auth", isAuth);
+userRouter.get("/user-data", auth, user);
 userRouter.post("/forgot-password", forgotPassword);
 userRouter.post("/reset-password", resetPassword);
 userRouter.delete("/logout", logout);

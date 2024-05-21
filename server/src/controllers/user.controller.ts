@@ -109,11 +109,25 @@ export const update: RequestHandler<unknown, unknown, UserData> = async (
   }
 };
 
+export const user: RequestHandler = async (req, res, next) => {
+  try {
+    const { resetToken, ...user } = req.user as UserData;
+
+    return res.status(200).json({ user });
+  } catch (error) {
+    return next(createError(500, "Internal Server Error"));
+  }
+};
+
 export const isAuth: RequestHandler = async (req, res, next) => {
   if (req.isAuthenticated()) {
     return res.status(200).json({ msg: "Authorized", access: true });
   } else {
-    return res.status(401).json({ msg: "Session expired", access: false });
+    return res.status(401).json({
+      msg: "Not authenticated or session expired",
+      access: false,
+      text: "Please sign in! ⛔",
+    });
   }
 };
 

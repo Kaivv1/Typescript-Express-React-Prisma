@@ -11,8 +11,6 @@ export type User = {
   password: string;
   avatar?: string | null;
   provider?: string;
-  resetToken?: string;
-  resetTokenExpiration?: Date;
 };
 
 export type IsAuth = {
@@ -51,14 +49,30 @@ export type ForgotPasswordData = {
 export type ResetPasswordArgs = {
   token: string;
 };
+
 export type ResetPasswordData = {
   msg: string;
+};
+
+type UserData = {
+  user: User;
 };
 
 export const isAuth = async (): Promise<IsAuth> => {
   try {
     const res = await axios.get(`${api}/user/auth`, { withCredentials: true });
 
+    return res.data;
+  } catch (error) {
+    throw customAxiosError(error);
+  }
+};
+
+export const user = async (): Promise<UserData> => {
+  try {
+    const res = await axios.get(`${api}/user/user-data`, {
+      withCredentials: true,
+    });
     return res.data;
   } catch (error) {
     throw customAxiosError(error);

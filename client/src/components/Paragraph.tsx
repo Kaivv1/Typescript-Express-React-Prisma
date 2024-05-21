@@ -9,7 +9,7 @@ const Paragraph: FC<ParagraphProps> = ({ className, variant, ...props }) => {
   let baseClassName;
   if (variant === "sm") baseClassName = "text-sm font-medium";
   if (variant === "base") baseClassName = "text-base";
-  if (variant === "lg") baseClassName = "text-lg font-semibold";
+  if (variant === "lg") baseClassName = "text-base 2xl:text-lg font-semibold";
   if (variant === "muted") baseClassName = "text-sm text-muted-foreground";
 
   return <p className={cn(baseClassName, className)} {...props} />;
