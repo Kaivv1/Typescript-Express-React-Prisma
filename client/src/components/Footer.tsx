@@ -1,10 +1,20 @@
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import Paragraph from "./Paragraph";
+import { ComponentPropsWithoutRef, FC } from "react";
+import { cn } from "@/lib/utils";
 
-const Footer = () => {
+type FooterProps = ComponentPropsWithoutRef<"footer">;
+
+const Footer: FC<FooterProps> = ({ className }) => {
   return (
-    <footer className="flex flex-col items-center justify-center gap-1 rounded-lg border bg-card p-2 text-card-foreground shadow-sm sm:p-4">
+    //
+    <footer
+      className={cn(
+        " flex flex-col items-center justify-center gap-1 rounded-lg border bg-card p-2 text-card-foreground shadow-sm sm:p-4",
+        className,
+      )}
+    >
       <div className="space-x-2">
         <Link to="">
           <Button className="p-0" variant="link">

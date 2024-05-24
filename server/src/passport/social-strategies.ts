@@ -23,7 +23,7 @@ export const githubStrategy = new GitHubStrategy(
     done: any
   ) {
     try {
-      const existingUser = await prisma.user.findUnique({
+      const existingUser = await prisma.user.findFirst({
         where: { email: profile.emails.at(0)?.value },
       });
       if (existingUser) {
@@ -54,7 +54,7 @@ export const googleStrategy = new GoogleStrategy(
   },
   async (request, accessToken, refreshToken, profile, done) => {
     try {
-      const existingUser = await prisma.user.findUnique({
+      const existingUser = await prisma.user.findFirst({
         where: { email: profile?.emails?.at(0)?.value },
       });
       if (existingUser) {

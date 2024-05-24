@@ -16,6 +16,7 @@ import {
   googleStrategy,
 } from "./passport/social-strategies.js";
 import { localStrategy } from "./passport/local-strategy.js";
+import { filesRouter } from "./routes/files.route.js";
 
 dotenv.configDotenv();
 const app: Application = express();
@@ -33,6 +34,7 @@ app.use(
     name: "sess",
     secret: process.env.COOKIE_SECRET!,
     resave: false,
+
     saveUninitialized: false,
     cookie: {
       maxAge: 60 * 60 * 1000,
@@ -61,6 +63,7 @@ passport.use(githubStrategy);
 passport.use(localStrategy);
 
 app.use("/user", userRouter);
+app.use("/files", filesRouter);
 
 app.listen(port, () => console.log(`App running on port ${port}`));
 

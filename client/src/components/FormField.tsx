@@ -4,8 +4,8 @@ import { Input } from "./ui/input";
 import { Eye, EyeOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 type FormFieldProps = {
-  label: string;
-  labelFor: string;
+  label?: string;
+  labelFor?: string;
   error?: string;
   passwordField?: boolean;
 } & ComponentPropsWithoutRef<"input">;
@@ -42,7 +42,7 @@ const FormField = forwardRef<HTMLInputElement, FormFieldProps>(
             />
           </div>
         ) : (
-          <Input {...props} ref={ref} />
+          <Input {...props} ref={ref} className={className} />
         )}
       </div>
     );

@@ -1,5 +1,5 @@
 import { useUser } from "@/features/auth/useUser";
-import { Avatar, AvatarImage } from "./ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import userIcon from "../assets/default-user.jpg";
 import { LogOut, User as UserIcon } from "lucide-react";
 
@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useLogout } from "@/features/auth/useLogout";
 import Loader from "./Loader";
+import Paragraph from "./Paragraph";
 
 const User = () => {
   const { user } = useUser();
@@ -20,13 +21,21 @@ const User = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="cursor-pointer">
-        <Avatar className="flex items-center justify-center">
-          {isLoggingOut ? (
-            <Loader size="sm" />
-          ) : (
-            <AvatarImage src={user?.avatar ? user.avatar : userIcon} />
-          )}
-        </Avatar>
+        <div className="flex items-center gap-0 sm:gap-2">
+          <Paragraph variant="base" className="hidden sm:block">
+            {user?.fullName}
+          </Paragraph>
+          <Avatar className="flex h-9 w-9 items-center justify-center">
+            {isLoggingOut ? (
+              <Loader size="sm" />
+            ) : (
+              <>
+                <AvatarImage src={user?.avatar ? user.avatar : userIcon} />
+                <AvatarFallback>CN</AvatarFallback>
+              </>
+            )}
+          </Avatar>
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>My Account</DropdownMenuLabel>

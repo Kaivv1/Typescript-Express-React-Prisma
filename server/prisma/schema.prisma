@@ -31,3 +31,15 @@ model Session {
   data      String?
   expiresAt DateTime
 }
+
+model File {
+  id            String   @id @default(uuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  type          String
+  url           String
+  title         String
+  isFavorite    Boolean
+  isForDeletion Boolean
+  userId        String
+}

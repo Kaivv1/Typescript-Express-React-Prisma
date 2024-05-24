@@ -1,24 +1,30 @@
 import { isAuth } from "@/api/user";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 
-type AuthError = Error & {
-  msg: string;
-  access: boolean;
-  text?: string;
-};
-
-export const useAuth = () => {
-  const { data, isLoading, error } = useQuery({
+export const useAuth = (interval = 60 * 60 * 1000) => {
+  const queryClient = useQueryClient();
+  const { data, isLoading } = useQuery({
     queryKey: ["userAuth"],
     queryFn: isAuth,
     retry: 0,
   });
-  const authError = error as AuthError;
+
+  useEffect(() => {
+    const invalidateInterval = setInterval(() => {
+      queryClient.invalidateQueries(
+        { queryKey: ["userAuth"] },
+        { cancelRefetch: true },
+      );
+    }, interval);
+
+    return () => clearInterval(invalidateInterval);
+  }, [queryClient, interval]);
 
   return {
-    access: data?.access || authError?.access,
-    msg: data?.msg || authError?.msg,
-    text: authError?.text,
+    access: data?.access,
+    msg: data?.msg,
+    text: data?.text,
     isLoading,
   };
 };

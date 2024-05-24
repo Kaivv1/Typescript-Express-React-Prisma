@@ -1,5 +1,11 @@
+import FilesSection from "@/components/FilesSection";
+
 const Starred = () => {
-  return <div>Starred</div>;
+  return (
+    <div>
+      <FilesSection title="Starred Files" />
+    </div>
+  );
 };
 
 export default Starred;

@@ -13,7 +13,7 @@ export const localStrategy = new LocalStrategy(
   { usernameField: "email", passwordField: "password" },
   async (email, password, done) => {
     try {
-      const existingUser = await prisma.user.findFirst({
+      const existingUser = await prisma.user.findUnique({
         where: {
           email,
         },
@@ -37,18 +37,22 @@ export const localStrategy = new LocalStrategy(
 );
 
 passport.serializeUser((user: ExpressUser, done) => {
-  return done(null, user.id);
+  process.nextTick(() => {
+    return done(null, user.id);
+  });
 });
 
-passport.deserializeUser(async (user: any, done) => {
-  try {
-    const existingUser = await prisma.user.findFirst({
-      where: { id: user.id },
-    });
-    const { password, ...userWithoutPass } = existingUser as UserData;
+passport.deserializeUser((user: any, done) => {
+  process.nextTick(async () => {
+    try {
+      const existingUser = await prisma.user.findUnique({
+        where: { id: user },
+      });
+      const { password, ...userWithoutPass } = existingUser as UserData;
 
-    return done(null, userWithoutPass);
-  } catch (error) {
-    return done(createError(500, "Problem with deserializing the user"));
-  }
+      return done(null, userWithoutPass);
+    } catch (error) {
+      return done(createError(500, "Error deserializing user"));
+    }
+  });
 });

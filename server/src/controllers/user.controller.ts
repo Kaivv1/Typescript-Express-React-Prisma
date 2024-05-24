@@ -2,7 +2,6 @@ import type { RequestHandler } from "express";
 import prisma from "../prisma-client.js";
 import { createError } from "../utils/error-handling.js";
 import bcryptjs from "bcryptjs";
-import { randomBytes } from "crypto";
 import { EmailProps, sendMail } from "../utils/send-mail.js";
 import { createJwtToken, verifyJwtToken } from "../utils/jwt-token.js";
 import { VerifyErrors } from "jsonwebtoken";
@@ -112,7 +111,6 @@ export const update: RequestHandler<unknown, unknown, UserData> = async (
 export const user: RequestHandler = async (req, res, next) => {
   try {
     const { resetToken, ...user } = req.user as UserData;
-
     return res.status(200).json({ user });
   } catch (error) {
     return next(createError(500, "Internal Server Error"));
@@ -121,9 +119,9 @@ export const user: RequestHandler = async (req, res, next) => {
 
 export const isAuth: RequestHandler = async (req, res, next) => {
   if (req.isAuthenticated()) {
-    return res.status(200).json({ msg: "Authorized", access: true });
+    return res.json({ msg: "Authorized", access: true });
   } else {
-    return res.status(401).json({
+    return res.json({
       msg: "Not authenticated or session expired",
       access: false,
       text: "Please sign in! ⛔",

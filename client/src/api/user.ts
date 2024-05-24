@@ -16,6 +16,7 @@ export type User = {
 export type IsAuth = {
   access: boolean;
   msg: string;
+  text?: string;
 };
 
 export type RegisterArgs = {
@@ -59,13 +60,9 @@ type UserData = {
 };
 
 export const isAuth = async (): Promise<IsAuth> => {
-  try {
-    const res = await axios.get(`${api}/user/auth`, { withCredentials: true });
+  const res = await axios.get(`${api}/user/auth`, { withCredentials: true });
 
-    return res.data;
-  } catch (error) {
-    throw customAxiosError(error);
-  }
+  return res.data;
 };
 
 export const user = async (): Promise<UserData> => {

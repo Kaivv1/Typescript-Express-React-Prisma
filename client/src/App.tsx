@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./Layout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -32,12 +32,14 @@ function App() {
             <Routes>
               <Route index element={<Home />} />
               <Route
+                path="dashboard"
                 element={
                   <ProtectedRoute>
                     <Layout />
                   </ProtectedRoute>
                 }
               >
+                <Route index element={<Navigate replace to="files" />} />
                 <Route path="files" element={<Files />} />
                 <Route path="starred" element={<Starred />} />
                 <Route path="trash" element={<Trash />} />

@@ -1,4 +1,4 @@
-import { Router, Request, Response } from "express";
+import { Router } from "express";
 import {
   register,
   login,
@@ -39,7 +39,7 @@ userRouter.get(
   "/auth/github/callback",
   passport.authenticate("github", {
     failureRedirect: `${client}/login`,
-    successRedirect: `${client}`,
+    successRedirect: `${client}/dashboard`,
   })
 );
 
@@ -52,6 +52,6 @@ userRouter.get(
   "/auth/google/callback",
   passport.authenticate("google", {
     failureRedirect: `${client}/login`,
-    successRedirect: `${client}`,
+    successRedirect: `${client}/dashboard`,
   })
 );
