@@ -1,9 +1,9 @@
-import FilesSection from "@/components/FilesSection";
+import FilesSection from "@/features/dashboard/files/FilesSection";
 
 const Trash = () => {
   return (
     <div>
-      <FilesSection title="Trash" />
+      <FilesSection title="Trash" page="trash" />
     </div>
   );
 };

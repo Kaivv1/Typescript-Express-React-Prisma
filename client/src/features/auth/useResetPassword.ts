@@ -14,7 +14,11 @@ export const useResetPassword = () => {
       navigate("/login");
     },
     onError: (error: CustomError) => {
-      toast({ title: error.msg, variant: "destructive" });
+      toast({
+        title: `${error.statusCode}`,
+        description: error.msg,
+        variant: "destructive",
+      });
     },
   });
   return { resetPassword, isResetting };

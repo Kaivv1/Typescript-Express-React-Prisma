@@ -13,7 +13,7 @@ export const useAuth = (interval = 60 * 60 * 1000) => {
   useEffect(() => {
     const invalidateInterval = setInterval(() => {
       queryClient.invalidateQueries(
-        { queryKey: ["userAuth"] },
+        { queryKey: ["userAuth", "user", "files"] },
         { cancelRefetch: true },
       );
     }, interval);

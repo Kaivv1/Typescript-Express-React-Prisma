@@ -8,7 +8,6 @@ import { useLocation } from "react-router-dom";
 
 const NavigationBar = () => {
   const { pathname } = useLocation();
-  console.log(pathname);
   return (
     <NavigationMenu className="w-full items-start justify-start">
       <NavigationMenuList className="flex w-full flex-col  gap-5">

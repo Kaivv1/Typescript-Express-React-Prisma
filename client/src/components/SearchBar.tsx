@@ -25,7 +25,12 @@ const SearchBar: FC<SearchBarProps> = ({ query, onSearch }) => {
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex gap-2">
-      <Input {...register("query")} placeholder="Search for files..." />
+      <Input
+        {...register("query", {
+          required: true,
+        })}
+        placeholder="Search for files..."
+      />
       <Button type="submit" className="gap-1">
         Search
         <Search className="h-5 w-5" />

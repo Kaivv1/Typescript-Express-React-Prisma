@@ -124,3 +124,33 @@ export const upload: RequestHandler<
     return next(createError(500, "Internal Server Error"));
   }
 };
+
+export const update: RequestHandler<
+  { id: string },
+  unknown,
+  { title?: string; isFavorite?: boolean; isForDeletion?: boolean }
+> = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) return next(createError(400, "No id provided"));
+
+    await prisma.file
+      .update({
+        where: {
+          id,
+        },
+        data: {
+          ...req.body,
+        },
+      })
+      .then(() => {
+        return res.status(200).json({ msg: "File updated" });
+      })
+      .catch((error) => {
+        if (error) return next(createError(500, "Error updating database"));
+      });
+  } catch (error) {
+    return next(createError(500, "Internal Server Error"));
+  }
+};

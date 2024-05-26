@@ -12,7 +12,11 @@ export const useLogin = () => {
     mutationFn: loginAPI,
     onSuccess: () => navigate("/dashboard", { replace: true }),
     onError: (error: CustomError) => {
-      toast({ title: error.msg, variant: "destructive" });
+      toast({
+        title: `${error.statusCode}`,
+        description: error.msg,
+        variant: "destructive",
+      });
     },
   });
 

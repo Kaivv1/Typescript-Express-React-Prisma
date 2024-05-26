@@ -11,7 +11,11 @@ export const useForgotPassword = () => {
       toast({ title: msg, variant: "success" });
     },
     onError: (error: CustomError) => {
-      toast({ title: error.msg, variant: "destructive" });
+      toast({
+        title: `${error.statusCode}`,
+        description: error.msg,
+        variant: "destructive",
+      });
     },
   });
   return { forgotPassword, isPending };
