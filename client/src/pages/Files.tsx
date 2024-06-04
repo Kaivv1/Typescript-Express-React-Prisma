@@ -1,9 +1,11 @@
-import FilesSection from "@/features/dashboard/files/FilesSection";
+import FilesSection from "@/features/dashboard/FilesSection";
+import { useFiles } from "@/features/dashboard/useFiles";
 
 const Files = () => {
+  const { files, isLoading } = useFiles("files");
   return (
     <div>
-      <FilesSection title="Your Files" page="files" />
+      <FilesSection title="Your Files" files={files!} isLoading={isLoading} />
     </div>
   );
 };

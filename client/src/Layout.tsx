@@ -29,7 +29,7 @@ const Layout = () => {
       <Header className="col-span-2 row-start-1" ref={headerRef} />
       <Sidebar className="col-row-full" />
       <main
-        className="overflow-y-auto rounded-lg border bg-card p-2 text-card-foreground shadow-sm sm:p-4"
+        className="main-scroll overflow-y-auto rounded-lg border bg-card p-2 text-card-foreground shadow-sm sm:p-4"
         style={{ height: `calc(100vh - ${headerHeight}px - (3 * 8px))` }}
       >
         <Outlet />

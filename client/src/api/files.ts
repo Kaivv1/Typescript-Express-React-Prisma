@@ -8,6 +8,7 @@ export type FileData = {
   updatedAt: Date;
   type: string;
   url: string;
+  size: string;
   title: string;
   isFavorite: boolean;
   isForDeletion: boolean;
@@ -28,6 +29,18 @@ type Files = {
 export const getFiles = async (): Promise<Files> => {
   try {
     const res = await axios.get(`${api}/files/all`, { withCredentials: true });
+
+    return res.data;
+  } catch (error) {
+    throw customAxiosError(error);
+  }
+};
+
+export const searchFiles = async (query: string): Promise<Files> => {
+  try {
+    const res = await axios.get(`${api}/files/search?query=${query}`, {
+      withCredentials: true,
+    });
 
     return res.data;
   } catch (error) {

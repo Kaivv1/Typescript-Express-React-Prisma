@@ -4,7 +4,7 @@ import { compareAsc } from "date-fns";
 import { PageType } from "./FilesSection";
 
 export const useFiles = (page: PageType) => {
-  const { data, isLoading, error } = useQuery({
+  const { data, isPending: isLoading } = useQuery({
     queryKey: ["files"],
     queryFn: getFiles,
     retry: 0,
@@ -24,5 +24,5 @@ export const useFiles = (page: PageType) => {
   if (page === "trash")
     pageFiles = filesInOrder?.filter(({ isForDeletion }) => isForDeletion);
 
-  return { files: pageFiles, isLoading, error };
+  return { files: pageFiles, isLoading };
 };

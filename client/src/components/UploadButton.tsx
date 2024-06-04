@@ -11,7 +11,7 @@ import {
 } from "./ui/dialog";
 import FormField from "./FormField";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useUpload } from "@/features/dashboard/files/useUpload";
+import { useUpload } from "@/features/dashboard/useUpload";
 import Loader from "./Loader";
 import { useState } from "react";
 

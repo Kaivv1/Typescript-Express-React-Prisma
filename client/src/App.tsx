@@ -13,6 +13,7 @@ import ResetPassword from "./pages/ResetPassword";
 import Files from "./pages/Files";
 import Starred from "./pages/Starred";
 import Trash from "./pages/Trash";
+import Search from "./pages/Search";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -43,6 +44,7 @@ function App() {
                 <Route path="files" element={<Files />} />
                 <Route path="starred" element={<Starred />} />
                 <Route path="trash" element={<Trash />} />
+                <Route path="search" element={<Search />} />
               </Route>
               <Route path="forgot-password" element={<ForgotPassword />} />
               <Route path="reset-password" element={<ResetPassword />} />

@@ -1,34 +1,55 @@
-import type { Dispatch, FC, SetStateAction } from "react";
 import { Button } from "./ui/button";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Input } from "./ui/input";
 import { Search } from "lucide-react";
-
-type SearchBarProps = {
-  query: string;
-  onSearch: Dispatch<SetStateAction<string>>;
-};
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
+import { FileData } from "@/api/files";
 
 type FormProps = {
   query: string;
 };
 
-const SearchBar: FC<SearchBarProps> = ({ query, onSearch }) => {
-  const { reset, handleSubmit, register } = useForm<FormProps>({
-    defaultValues: { query },
-  });
+const SearchBar = () => {
+  const { reset, handleSubmit, register } = useForm<FormProps>();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const onSubmit: SubmitHandler<FormProps> = ({ query }) => {
-    onSearch(query);
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const queryClient = useQueryClient();
+
+  const setQuery = async (query: string) =>
+    new Promise((resolve) => {
+      const { files }: { files: FileData[] | [] } = queryClient.getQueryData([
+        "searchedFiles",
+      ]) || { files: [] };
+
+      if (files) {
+        queryClient.removeQueries({ queryKey: ["searchedFiles"] });
+      }
+
+      searchParams.set("query", query);
+      setSearchParams(searchParams);
+
+      const newQuery = searchParams.get("query");
+      return resolve(newQuery);
+    });
+
+  const onSubmit: SubmitHandler<FormProps> = async ({ query }) => {
+    if (!query) return;
+
+    await setQuery(query).then((newQuery) => {
+      if (pathname !== "/dashboard/search") {
+        navigate(`/dashboard/search?query=${newQuery}`);
+      }
+    });
     reset();
-    console.log(query);
   };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex gap-2">
       <Input
-        {...register("query", {
-          required: true,
-        })}
+        {...register("query", { required: true })}
         placeholder="Search for files..."
       />
       <Button type="submit" className="gap-1">

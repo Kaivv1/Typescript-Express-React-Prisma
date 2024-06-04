@@ -15,7 +15,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../../../components/ui/dropdown-menu";
+} from "../../components/ui/dropdown-menu";
 import { downloadFile, open } from "@/helpers/download";
 import {
   Dialog,
@@ -24,9 +24,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "../../../components/ui/dialog";
-import FormField from "../../../components/FormField";
-import { Button } from "../../../components/ui/button";
+} from "../../components/ui/dialog";
+import FormField from "../../components/FormField";
+import { Button } from "../../components/ui/button";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useUpdateFile } from "./useUpdateFile";
 import Loader from "@/components/Loader";

@@ -6,7 +6,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../../../components/ui/card";
+} from "../../components/ui/card";
 import {
   ImageIcon,
   FileTextIcon,
@@ -14,7 +14,7 @@ import {
   TextIcon,
   StarIcon,
 } from "lucide-react";
-import Paragraph from "../../../components/Paragraph";
+import Paragraph from "../../components/Paragraph";
 import { formatRelative } from "date-fns";
 import FileActions from "./FileActions";
 
@@ -23,8 +23,7 @@ type FileCardProps = {
 };
 
 const FileCard: FC<FileCardProps> = ({ file }) => {
-  const { updatedAt, createdAt, title, isFavorite, isForDeletion, type, url } =
-    file;
+  const { updatedAt, title, isFavorite, isForDeletion, type, url } = file;
   const icon: {
     [el: string]: ReactNode;
   } = {

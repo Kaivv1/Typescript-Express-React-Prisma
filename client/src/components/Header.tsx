@@ -13,7 +13,7 @@ const Header = forwardRef<HTMLElement, HeaderProps>(function Header(
   { className },
   ref,
 ) {
-  const { access, isLoading } = useAuth();
+  const { isLoading, access } = useAuth();
 
   return (
     <header
@@ -24,7 +24,7 @@ const Header = forwardRef<HTMLElement, HeaderProps>(function Header(
       )}
     >
       <Logo />
-      {!isLoading && !access ? (
+      {!access ? (
         <div className="flex items-center gap-1 md:gap-2">
           <Link to="/login">
             <Button size="sm">Sign in</Button>

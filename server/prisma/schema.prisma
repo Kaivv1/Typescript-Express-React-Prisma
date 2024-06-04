@@ -39,6 +39,7 @@ model File {
   type          String
   url           String
   title         String
+  size          String
   isFavorite    Boolean
   isForDeletion Boolean
   userId        String

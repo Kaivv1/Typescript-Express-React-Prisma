@@ -40,6 +40,16 @@ const getFileType = (file: Express.Multer.File) => {
   return type;
 };
 
+const calcFileSize = (file: Express.Multer.File) => {
+  const sizeInBytes = file.size;
+  const sizeInKB = +(sizeInBytes / 1024).toFixed(0);
+  const sizeInMB = +(sizeInKB / 1024).toFixed(0);
+  const fileSize = `${sizeInKB >= 1024 ? sizeInMB : sizeInKB} ${
+    sizeInKB >= 1024 ? "MB" : "KB"
+  }`;
+  return { fileSize, sizeInMB };
+};
+
 export const getFiles: RequestHandler = async (req, res, next) => {
   try {
     const files = await prisma.file.findMany({
@@ -51,6 +61,33 @@ export const getFiles: RequestHandler = async (req, res, next) => {
     if (!files) return next(createError(404, "No files found"));
 
     return res.status(200).json({ files });
+  } catch (error) {
+    return next(createError(500, "Internal Server Error"));
+  }
+};
+
+export const searchFiles: RequestHandler<
+  unknown,
+  unknown,
+  unknown,
+  { query: string }
+> = async (req, res, next) => {
+  try {
+    const { query } = req.query;
+    if (!query) return next(createError(400, "No query provided"));
+
+    const searchedFiles = await prisma.file.findMany({
+      where: {
+        userId: req.user?.id,
+        title: {
+          contains: query,
+        },
+      },
+    });
+    if (!searchedFiles || searchedFiles.length === 0)
+      return next(createError(404, "No results found"));
+
+    return res.status(200).json({ files: searchedFiles });
   } catch (error) {
     return next(createError(500, "Internal Server Error"));
   }
@@ -72,7 +109,11 @@ export const upload: RequestHandler<
     );
 
     if (!isFileSupported)
-      return next(createError(400, "File type not supported"));
+      return next(createError(415, "File type not supported"));
+
+    const { sizeInMB, fileSize } = calcFileSize(file);
+
+    if (sizeInMB > 10) return next(createError(413, "File exceeds 10MB"));
 
     const userFiles = await prisma.file.findMany({
       where: { userId: req.user?.id },
@@ -106,6 +147,7 @@ export const upload: RequestHandler<
           url: fileUrl,
           type: fileType!,
           userId: req.user?.id!,
+          size: fileSize,
           isFavorite: false,
           isForDeletion: false,
         },
