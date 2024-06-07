@@ -6,6 +6,7 @@ export type FileData = {
   id: string;
   createdAt: Date;
   updatedAt: Date;
+  trashedAt?: Date;
   type: string;
   url: string;
   size: string;
@@ -20,6 +21,7 @@ export type RenameFileArgs = {
   title?: string;
   isFavorite?: boolean;
   isForDeletion?: boolean;
+  trashedAt?: Date;
 };
 
 type Files = {
@@ -70,10 +72,40 @@ export const updateFile = async (
 ): Promise<{ msg: string }> => {
   try {
     const { id, ...rest } = args;
-    const res = await axios.post(
+    const res = await axios.patch(
       `${api}/files/update/${id}`,
       { ...rest },
       { withCredentials: true },
+    );
+
+    return res.data;
+  } catch (error) {
+    throw customAxiosError(error);
+  }
+};
+
+export const deleteFile = async (id: string): Promise<{ msg: string }> => {
+  try {
+    const res = await axios.delete(`${api}/files/delete/${id}`, {
+      withCredentials: true,
+    });
+
+    return res.data;
+  } catch (error) {
+    throw customAxiosError(error);
+  }
+};
+
+export const deleteAll = async (args: {
+  files: FileData[];
+}): Promise<{ msg: string }> => {
+  try {
+    const res = await axios.put(
+      `${api}/files/delete/all`,
+      { ...args },
+      {
+        withCredentials: true,
+      },
     );
 
     return res.data;

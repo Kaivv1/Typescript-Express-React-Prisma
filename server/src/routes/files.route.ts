@@ -2,6 +2,8 @@ import { Router } from "express";
 import multer from "multer";
 import {
   getFiles,
+  remove,
+  removeAll,
   searchFiles,
   update,
   upload,
@@ -16,4 +18,6 @@ export const filesRouter = Router();
 filesRouter.post("/upload-file", auth, uploadFile.single("file"), upload);
 filesRouter.get("/all", auth, getFiles);
 filesRouter.get("/search", auth, searchFiles);
-filesRouter.post("/update/:id", auth, update);
+filesRouter.patch("/update/:id", auth, update);
+filesRouter.delete("/delete/:id", auth, remove);
+filesRouter.put("/delete/all", auth, removeAll);

@@ -41,6 +41,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { useDeleteFile } from "./useDeleteFile";
 
 type FileActionsProps = {
   file: FileData;
@@ -61,6 +62,7 @@ const FileActions: FC<FileActionsProps> = ({ file }) => {
     formState: { errors },
   } = useForm<FileActionsFormProps>({ defaultValues: { title } });
   const { isUpdating, update } = useUpdateFile();
+  const { remove, isDeleting } = useDeleteFile();
   const { toast } = useToast();
 
   const toggleRenameDialog = () => setIsOpenRename((isOpen) => !isOpen);
@@ -102,7 +104,12 @@ const FileActions: FC<FileActionsProps> = ({ file }) => {
               disabled={isUpdating}
               onClick={() =>
                 update(
-                  { id, isForDeletion: !isForDeletion },
+                  {
+                    id,
+                    isForDeletion: !isForDeletion,
+                    isFavorite: false,
+                    trashedAt: new Date(Date.now()),
+                  },
                   {
                     onSuccess: () => {
                       toast({
@@ -165,62 +172,78 @@ const FileActions: FC<FileActionsProps> = ({ file }) => {
         </DialogContent>
       </Dialog>
 
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <MoreVertical />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => open(url)} className="gap-1">
-            <EyeIcon className="h-5 w-5" /> View
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => downloadFile(url, title)}
-            className="gap-1"
-          >
-            <DownloadIcon className="h-5 w-5" />
-            Download
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={toggleRenameDialog} className="gap-1">
-            <PencilIcon className="h-5 w-5" />
-            Rename
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            className="gap-1"
-            onClick={() =>
-              update(
-                {
-                  id,
-                  isFavorite: !isFavorite,
-                },
-                {
-                  onSuccess: () => {
-                    toast({
-                      title: isFavorite
-                        ? "Removed from starred"
-                        : "Moved to starred",
-                      variant: "success",
-                    });
+      {!isForDeletion && (
+        <DropdownMenu>
+          <DropdownMenuTrigger disabled={isDeleting || isUpdating}>
+            {isDeleting || isUpdating ? <Loader size="sm" /> : <MoreVertical />}
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => open(url)} className="gap-1">
+              <EyeIcon className="h-5 w-5" /> View
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => downloadFile(url, title)}
+              className="gap-1"
+            >
+              <DownloadIcon className="h-5 w-5" />
+              Download
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={toggleRenameDialog} className="gap-1">
+              <PencilIcon className="h-5 w-5" />
+              Rename
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="gap-1"
+              onClick={() =>
+                update(
+                  {
+                    id,
+                    isFavorite: !isFavorite,
                   },
-                },
-              )
-            }
-          >
-            {isFavorite ? (
-              <>
-                <StarOffIcon className="h-5 w-5" />
-                Remove from starred
-              </>
-            ) : (
-              <>
-                <StarIcon className="h-5 w-5" />
-                Move to starred
-              </>
-            )}
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            className="gap-1"
-            onClick={() => {
-              if (isForDeletion) {
+                  {
+                    onSuccess: () => {
+                      toast({
+                        title: isFavorite
+                          ? "Removed from starred"
+                          : "Moved to starred",
+                        variant: "success",
+                      });
+                    },
+                  },
+                )
+              }
+            >
+              {isFavorite ? (
+                <>
+                  <StarOffIcon className="h-5 w-5" />
+                  Remove from starred
+                </>
+              ) : (
+                <>
+                  <StarIcon className="h-5 w-5" />
+                  Move to starred
+                </>
+              )}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="gap-1"
+              onClick={() => toggleConfirmDialog()}
+            >
+              <TrashIcon className="h-5 w-5" />
+              Move to trash
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
+      {isForDeletion && (
+        <DropdownMenu>
+          <DropdownMenuTrigger disabled={isDeleting || isUpdating}>
+            {isDeleting || isUpdating ? <Loader size="sm" /> : <MoreVertical />}
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              className="gap-1"
+              onClick={() =>
                 update(
                   { id, isForDeletion: !isForDeletion },
                   {
@@ -231,26 +254,19 @@ const FileActions: FC<FileActionsProps> = ({ file }) => {
                       });
                     },
                   },
-                );
-              } else {
-                toggleConfirmDialog();
+                )
               }
-            }}
-          >
-            {isForDeletion ? (
-              <>
-                <UndoIcon className="h-5 w-5" />
-                Restore
-              </>
-            ) : (
-              <>
-                <TrashIcon className="h-5 w-5" />
-                Move to trash
-              </>
-            )}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+            >
+              <UndoIcon className="h-5 w-5" />
+              Restore
+            </DropdownMenuItem>
+            <DropdownMenuItem className="gap-1" onClick={() => remove(id)}>
+              <TrashIcon className="h-5 w-5" />
+              Delete forever
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
     </>
   );
 };

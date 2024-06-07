@@ -23,20 +23,41 @@ import FileCard from "./FileCard";
 import Placeholder from "@/components/Placeholder";
 import FilesTable from "./FilesTable";
 import { FileData } from "@/api/files";
+import { Button } from "@/components/ui/button";
+import { useDeleteFiles } from "./useDeleteFiles";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+} from "@/components/ui/alert-dialog";
+import { AlertDialogTitle } from "@radix-ui/react-alert-dialog";
 
 export type PageType = "files" | "starred" | "trash" | "search";
 
 type FilesSectionProps = {
   title: string;
   files: FileData[];
+  page?: PageType;
   isLoading?: boolean;
   error?: string;
 };
 
 export type FileTypes = "all" | "image" | "pdf" | "csv" | "txt";
 
-const FilesSection: FC<FilesSectionProps> = ({ title, files, isLoading }) => {
+const FilesSection: FC<FilesSectionProps> = ({
+  title,
+  files,
+  isLoading,
+  page,
+}) => {
   const [type, setType] = useState<FileTypes>("all");
+  const [showConfirm, setShowConfirm] = useState(false);
+  const { removeAll, isDeleting } = useDeleteFiles();
+  const toggleConfirmDialog = () => setShowConfirm((isOpen) => !isOpen);
 
   const modifiedFiles =
     type === "all" ? files : files?.filter((file) => file.type === type);
@@ -70,6 +91,59 @@ const FilesSection: FC<FilesSectionProps> = ({ title, files, isLoading }) => {
               </SelectContent>
             </Select>
           </div>
+          {page === "trash" && (
+            <>
+              <div>
+                <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold">
+                  Trashed files will be deleted automatically forever after 15
+                  days.
+                </code>
+                <Button
+                  className="h-auto gap-1 px-1 py-1 text-sm"
+                  onClick={toggleConfirmDialog}
+                >
+                  Clear all
+                </Button>
+              </div>
+
+              <AlertDialog
+                open={showConfirm}
+                onOpenChange={toggleConfirmDialog}
+              >
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you sure you want to continue this action ?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      All the trashed files will be deleted forever!
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      className="gap-1"
+                      onClick={() => {
+                        const filesForDeletion = modifiedFiles.filter(
+                          (file) => file.isForDeletion === true,
+                        );
+                        removeAll({ files: filesForDeletion });
+                      }}
+                    >
+                      {isDeleting ? (
+                        <>
+                          <span>Continuing</span>
+                          <Loader size="sm" />
+                        </>
+                      ) : (
+                        "Continue"
+                      )}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </>
+          )}
           <TabsList className="">
             <TabsTrigger value="grid" className="gap-1">
               Grid

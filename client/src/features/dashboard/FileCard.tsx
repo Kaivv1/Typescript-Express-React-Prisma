@@ -13,9 +13,10 @@ import {
   GanttChartIcon,
   TextIcon,
   StarIcon,
+  Trash,
 } from "lucide-react";
 import Paragraph from "../../components/Paragraph";
-import { formatRelative } from "date-fns";
+import { format, formatRelative } from "date-fns";
 import FileActions from "./FileActions";
 
 type FileCardProps = {
@@ -23,7 +24,8 @@ type FileCardProps = {
 };
 
 const FileCard: FC<FileCardProps> = ({ file }) => {
-  const { updatedAt, title, isFavorite, isForDeletion, type, url } = file;
+  const { trashedAt, updatedAt, title, isFavorite, isForDeletion, type, url } =
+    file;
   const icon: {
     [el: string]: ReactNode;
   } = {
@@ -54,10 +56,15 @@ const FileCard: FC<FileCardProps> = ({ file }) => {
       </CardContent>
       <CardFooter className="items-center justify-between">
         <Paragraph variant="muted">
-          Last modified {formatRelative(updatedAt, new Date(Date.now()))} <br />
+          {isForDeletion
+            ? `Trashed ${formatRelative(trashedAt!, new Date(Date.now()))}`
+            : `Last modified ${formatRelative(updatedAt, new Date(Date.now()))}`}
         </Paragraph>
         {isFavorite && (
           <StarIcon className="h-5 w-5 fill-yellow-300 stroke-yellow-300" />
+        )}
+        {isForDeletion && (
+          <Trash className="h-5 w-5 fill-primary stroke-primary" />
         )}
       </CardFooter>
     </Card>

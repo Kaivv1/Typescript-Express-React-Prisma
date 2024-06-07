@@ -33,9 +33,10 @@ model Session {
 }
 
 model File {
-  id            String   @id @default(uuid())
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id            String    @id @default(uuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  trashedAt     DateTime?
   type          String
   url           String
   title         String

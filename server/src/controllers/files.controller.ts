@@ -6,6 +6,20 @@ type UploadRequestBody = {
   title: string;
 };
 
+type FileData = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  trashedAt?: Date;
+  type: string;
+  url: string;
+  size: string;
+  title: string;
+  isFavorite: boolean;
+  isForDeletion: boolean;
+  userId: string;
+};
+
 type SupportedFileTypes =
   | "application/pdf"
   | "image/jpeg"
@@ -191,6 +205,87 @@ export const update: RequestHandler<
       })
       .catch((error) => {
         if (error) return next(createError(500, "Error updating database"));
+      });
+  } catch (error) {
+    return next(createError(500, "Internal Server Error"));
+  }
+};
+
+export const remove: RequestHandler<{ id: string }> = async (
+  req,
+  res,
+  next
+) => {
+  try {
+    const { id } = req.params;
+
+    const file = await prisma.file.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!file) return next(createError(404, "File not found"));
+
+    await prisma.file
+      .delete({
+        where: {
+          id,
+        },
+      })
+      .then(() => {
+        return res.status(200).json({ msg: "File deleted" });
+      })
+      .catch((error) => {
+        if (error)
+          return next(
+            createError(
+              500,
+              "There was a problem deleting this file from the database"
+            )
+          );
+      });
+  } catch (error) {
+    return next(createError(500, "Internal Server Error"));
+  }
+};
+
+export const removeAll: RequestHandler<
+  unknown,
+  unknown,
+  { files: FileData[] }
+> = async (req, res, next) => {
+  try {
+    const { files } = req.body;
+
+    if (!files) return next(createError(404, "No files found"));
+
+    await prisma.file
+      .deleteMany({
+        where: {
+          id: {
+            in: files.map((file) => file.id),
+          },
+        },
+      })
+      .then(async () => {
+        const imageNames = files.map((file) => file.title);
+        await supabase.storage
+          .from("files")
+          .remove(imageNames)
+          .catch((error) => {
+            if (error)
+              return next(
+                createError(500, "Problem deleting file images from bucket")
+              );
+          });
+        return res.status(200).json({ msg: "Files deleted" });
+      })
+      .catch((error) => {
+        if (error)
+          return next(
+            createError(500, "Problem deleting the files from the database")
+          );
       });
   } catch (error) {
     return next(createError(500, "Internal Server Error"));

@@ -1,17 +1,20 @@
-import { updateFile } from "@/api/files";
+import { deleteFile } from "@/api/files";
 import { useToast } from "@/components/ui/use-toast";
 import { CustomError } from "@/helpers/error";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export const useUpdateFile = () => {
-  const queryClient = useQueryClient();
+export const useDeleteFile = () => {
   const { toast } = useToast();
-
-  const { mutate: update, isPending: isUpdating } = useMutation({
-    mutationFn: updateFile,
-    onSuccess: () => {
+  const queryClient = useQueryClient();
+  const { mutate: remove, isPending: isDeleting } = useMutation({
+    mutationFn: deleteFile,
+    onSuccess: ({ msg }) => {
       queryClient.invalidateQueries({ queryKey: ["files"] });
       queryClient.invalidateQueries({ queryKey: ["searchedFiles"] });
+      toast({
+        title: msg,
+        variant: "success",
+      });
     },
     onError: (error: CustomError) => {
       toast({
@@ -21,5 +24,6 @@ export const useUpdateFile = () => {
       });
     },
   });
-  return { isUpdating, update };
+
+  return { remove, isDeleting };
 };

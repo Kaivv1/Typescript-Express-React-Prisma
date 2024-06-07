@@ -6,7 +6,12 @@ const Trash = () => {
 
   return (
     <div>
-      <FilesSection title="Trash" files={files!} isLoading={isLoading} />
+      <FilesSection
+        title="Trash"
+        files={files!}
+        isLoading={isLoading}
+        page="trash"
+      />
     </div>
   );
 };
