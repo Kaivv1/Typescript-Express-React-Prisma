@@ -7,7 +7,6 @@ import { Navigate } from "react-router-dom";
 const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const { access, isLoading, msg, text } = useAuth();
-  console.log(access, msg, text);
 
   const handleToggleModal = () => setShowModal((open) => !open);
 

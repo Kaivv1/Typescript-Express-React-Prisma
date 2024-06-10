@@ -70,7 +70,7 @@ const UploadButton = () => {
             label="File"
             labelFor="file"
             error={errors.file?.message}
-            className="file:rounded-md file:bg-primary file:text-primary-foreground file:hover:cursor-pointer "
+            className="file:rounded-md file:bg-primary file:text-primary-foreground file:hover:cursor-pointer"
             {...register("file", {
               disabled: isUploading,
               required: "Add a file",

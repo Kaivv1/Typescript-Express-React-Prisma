@@ -25,34 +25,9 @@ export type RegisterArgs = {
   password: string;
 };
 
-export type RegisterData = {
-  msg: string;
-};
-
 export type LoginArgs = {
   email: string;
   password: string;
-};
-
-export type LoginData = {
-  msg: string;
-  user: User;
-};
-
-export type ForgotPasswordArgs = {
-  email: string;
-};
-
-export type ForgotPasswordData = {
-  msg: string;
-};
-
-export type ResetPasswordArgs = {
-  token: string;
-};
-
-export type ResetPasswordData = {
-  msg: string;
 };
 
 type UserData = {
@@ -88,7 +63,9 @@ export const login = async (args: LoginArgs) => {
   }
 };
 
-export const register = async (args: RegisterArgs): Promise<RegisterData> => {
+export const register = async (
+  args: RegisterArgs,
+): Promise<{ msg: string }> => {
   try {
     const res = await axios.post(`${api}/user/register`, { ...args });
 
@@ -98,9 +75,25 @@ export const register = async (args: RegisterArgs): Promise<RegisterData> => {
   }
 };
 
-export const forgotPassword = async (
-  args: ForgotPasswordArgs,
-): Promise<ForgotPasswordData> => {
+export const update = async (formData: FormData) => {
+  try {
+    const res = await axios.put(`${api}/user/update`, formData, {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return res.data;
+  } catch (error) {
+    throw customAxiosError(error);
+  }
+};
+
+export const forgotPassword = async (args: {
+  email: string;
+}): Promise<{
+  msg: string;
+}> => {
   try {
     const res = await axios.post(`${api}/user/forgot-password`, { ...args });
 
@@ -110,11 +103,17 @@ export const forgotPassword = async (
   }
 };
 
-export const resetPassword = async (
-  args: ResetPasswordArgs,
-): Promise<ResetPasswordData> => {
+export const resetPassword = async (args: {
+  token: string;
+}): Promise<{
+  msg: string;
+}> => {
   try {
-    const res = await axios.post(`${api}/user/reset-password`, { ...args });
+    const res = await axios.post(
+      `${api}/user/reset-password`,
+      { ...args },
+      { withCredentials: true },
+    );
 
     return res.data;
   } catch (error) {

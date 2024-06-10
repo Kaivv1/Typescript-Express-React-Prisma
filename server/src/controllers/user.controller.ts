@@ -5,6 +5,7 @@ import bcryptjs from "bcryptjs";
 import { EmailProps, sendMail } from "../utils/send-mail.js";
 import { createJwtToken, verifyJwtToken } from "../utils/jwt-token.js";
 import { VerifyErrors } from "jsonwebtoken";
+import { supabase, supabaseUrl } from "../supabase.js";
 
 type BaseUserData = {
   email: string;
@@ -20,11 +21,6 @@ export type UserData = {
   provider?: string;
   resetToken?: string;
 } & BaseUserData;
-
-type SuccessResponse<T = {}> = {
-  msg: string;
-  data?: T | null;
-};
 
 type ForgotPassword = {
   email: string;
@@ -58,10 +54,9 @@ export const register: RequestHandler<unknown, unknown, BaseUserData> = async (
       data: { ...req.body, password: hashesPassword },
     });
 
-    const successResponse: SuccessResponse = {
+    return res.status(200).json({
       msg: "User created",
-    };
-    return res.status(200).json(successResponse);
+    });
   } catch (error) {
     return next(createError(500, "Internal Server Error"));
   }
@@ -81,28 +76,55 @@ export const update: RequestHandler<unknown, unknown, UserData> = async (
   next
 ) => {
   try {
-    console.log("This is user update function");
+    let avatarUrl = null;
+    const file = req.file;
 
-    // const updatedUser = await prisma.user
-    //   .update({
-    //     data: {
-    //       ...req.body,
-    //     },
-    //     where: {
-    //       id: req.userId,
-    //     },
-    //   })
-    //   .catch((err) => {
-    //     if (err) return next(createError(500, "Internal Server Error"));
-    //   });
+    if (file) {
+      const avatarObj = (
+        await supabase.storage.from("avatars").list()
+      ).data?.find((avatar) => avatar.name.split("+").at(0) === req.user?.id);
 
-    // const successResponse: SuccessResponse = {
-    //   msg: "User updated",
-    //   success: true,
-    //   data: updatedUser,
-    // };
+      if (avatarObj) {
+        const randomNumberAfterId = avatarObj?.name.split("+").at(1);
 
-    // return res.status(200).json(successResponse);
+        await supabase.storage
+          .from("avatars")
+          .remove([`${req.user?.id!}+${randomNumberAfterId}`]);
+      }
+
+      const randomNumber = Math.random();
+      const { error } = await supabase.storage
+        .from("avatars")
+        .upload(`${req.user?.id!}+${randomNumber}`, file.buffer, {
+          contentType: file.mimetype,
+        });
+
+      avatarUrl = `${supabaseUrl}/storage/v1/object/public/avatars/${req.user
+        ?.id!}+${randomNumber}`;
+
+      if (error)
+        return next(createError(500, "Error uploading user avatar to bucket"));
+    }
+
+    await prisma.user
+      .update({
+        data: {
+          avatar: avatarUrl ? avatarUrl : req.user?.avatar,
+          ...req.body,
+        },
+        where: {
+          id: req.user?.id,
+        },
+      })
+      .then(() => {
+        return res.status(200).json({ msg: "User updated" });
+      })
+      .catch(async (err) => {
+        if (err) {
+          await supabase.storage.from("avatars").remove([req.user?.id!]);
+          return next(createError(500, "Internal Server Error"));
+        }
+      });
   } catch (error) {
     return next(createError(500, "Internal Server Error"));
   }
@@ -224,6 +246,11 @@ export const resetPassword: RequestHandler<
             },
           })
           .then(() => {
+            if (req.isAuthenticated()) {
+              req.session.destroy((err) => console.log(err));
+              res.clearCookie("sess");
+            }
+
             return res.status(200).json({ msg: "User password updated" });
           })
           .catch((error) => {

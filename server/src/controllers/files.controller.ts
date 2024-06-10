@@ -171,7 +171,6 @@ export const upload: RequestHandler<
       })
       .catch(async (error) => {
         if (error) {
-          console.log(error);
           await supabase.storage.from("files").remove([title]);
           return next(createError(500, "Error uploading file to database"));
         }
@@ -258,7 +257,8 @@ export const removeAll: RequestHandler<
   try {
     const { files } = req.body;
 
-    if (!files) return next(createError(404, "No files found"));
+    if (!files || files.length === 0)
+      return next(createError(404, "No files found"));
 
     await prisma.file
       .deleteMany({

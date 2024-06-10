@@ -12,8 +12,11 @@ import {
 import passport from "passport";
 import { client } from "../constants.js";
 import { auth } from "../controllers/auth.controller.js";
+import multer from "multer";
 
 export const userRouter = Router();
+const storage = multer.memoryStorage();
+const uploadFile = multer({ storage });
 
 userRouter.post("/register", register);
 userRouter.post(
@@ -23,7 +26,7 @@ userRouter.post(
   }),
   login
 );
-userRouter.patch("/update", auth, update);
+userRouter.put("/update", auth, uploadFile.single("avatar"), update);
 userRouter.get("/auth", isAuth);
 userRouter.get("/user-data", auth, user);
 userRouter.post("/forgot-password", forgotPassword);

@@ -57,7 +57,6 @@ const FilesSection: FC<FilesSectionProps> = ({
   const [type, setType] = useState<FileTypes>("all");
   const [showConfirm, setShowConfirm] = useState(false);
   const { removeAll, isDeleting } = useDeleteFiles();
-  const toggleConfirmDialog = () => setShowConfirm((isOpen) => !isOpen);
 
   const modifiedFiles =
     type === "all" ? files : files?.filter((file) => file.type === type);
@@ -100,16 +99,13 @@ const FilesSection: FC<FilesSectionProps> = ({
                 </code>
                 <Button
                   className="h-auto gap-1 px-1 py-1 text-sm"
-                  onClick={toggleConfirmDialog}
+                  onClick={() => setShowConfirm(true)}
                 >
                   Clear all
                 </Button>
               </div>
 
-              <AlertDialog
-                open={showConfirm}
-                onOpenChange={toggleConfirmDialog}
-              >
+              <AlertDialog open={showConfirm}>
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>
@@ -120,14 +116,24 @@ const FilesSection: FC<FilesSectionProps> = ({
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogCancel onClick={() => setShowConfirm(false)}>
+                      Cancel
+                    </AlertDialogCancel>
                     <AlertDialogAction
                       className="gap-1"
+                      disabled={isDeleting}
                       onClick={() => {
                         const filesForDeletion = modifiedFiles.filter(
                           (file) => file.isForDeletion === true,
                         );
-                        removeAll({ files: filesForDeletion });
+                        removeAll(
+                          { files: filesForDeletion },
+                          {
+                            onSuccess: () => {
+                              setShowConfirm(false);
+                            },
+                          },
+                        );
                       }}
                     >
                       {isDeleting ? (

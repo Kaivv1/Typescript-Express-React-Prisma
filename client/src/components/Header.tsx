@@ -13,7 +13,7 @@ const Header = forwardRef<HTMLElement, HeaderProps>(function Header(
   { className },
   ref,
 ) {
-  const { isLoading, access } = useAuth();
+  const { access } = useAuth();
 
   return (
     <header

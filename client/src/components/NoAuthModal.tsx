@@ -7,6 +7,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 const NoAuthModal = ({
@@ -20,6 +21,7 @@ const NoAuthModal = ({
   open: boolean;
   onOpen: () => void;
 }) => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   return (
     <AlertDialog open={open}>
@@ -32,6 +34,7 @@ const NoAuthModal = ({
           <AlertDialogAction
             onClick={() => {
               onOpen();
+              queryClient.removeQueries();
               navigate("/login");
             }}
           >
