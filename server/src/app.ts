@@ -17,6 +17,7 @@ import {
 } from "./passport/social-strategies.js";
 import { localStrategy } from "./passport/local-strategy.js";
 import { filesRouter } from "./routes/files.route.js";
+import "./cron-jobs.js";
 
 dotenv.configDotenv();
 const app: Application = express();
