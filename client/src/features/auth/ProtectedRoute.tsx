@@ -11,7 +11,7 @@ const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   const handleToggleModal = () => setShowModal((open) => !open);
 
   useEffect(() => {
-    if (!access && msg) setShowModal(true);
+    if (access === false) setShowModal(true);
   }, [access, msg]);
 
   if (isLoading)
