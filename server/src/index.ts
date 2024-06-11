@@ -25,7 +25,7 @@ const app: Application = express();
 app.use(
   cors({
     credentials: true,
-    origin: ["https://file-drive-three.vercel.app"],
+    origin: [client],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD"],
   })
 );
