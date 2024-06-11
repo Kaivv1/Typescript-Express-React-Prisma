@@ -59,7 +59,7 @@
 }
 
 ::-webkit-scrollbar {
-  @apply w-[0.3rem];
+  @apply h-[0.3rem] w-[0.3rem];
 }
 ::-webkit-scrollbar-track {
   @apply rounded-r-md bg-muted;

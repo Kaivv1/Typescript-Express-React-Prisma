@@ -15,6 +15,7 @@ import AuthSeparator from "@/components/AuthSeparator";
 import SocialButton from "@/components/SocialButton";
 import AuthFooter from "@/components/AuthFooter";
 import { useRegister } from "./useRegister";
+import Logo from "@/components/Logo";
 
 type RegisterFormProps = {
   email: string;
@@ -40,7 +41,9 @@ const RegisterForm: FC = (): React.JSX.Element => {
   return (
     <Card className="w-full max-w-96 ">
       <CardHeader>
-        <CardTitle>FileDrive</CardTitle>
+        <CardTitle>
+          <Logo className="text-2xl font-semibold" />
+        </CardTitle>
         <CardDescription>
           Welcome to FileDrive. Create an account and start using your personal
           file storage. 🚀

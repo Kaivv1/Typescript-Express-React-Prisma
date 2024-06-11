@@ -5,7 +5,7 @@ const Files = () => {
   const { files, isLoading } = useFiles("files");
   return (
     <div>
-      <FilesSection title="Your Files" files={files!} isLoading={isLoading} />
+      <FilesSection title="Files" files={files!} isLoading={isLoading} />
     </div>
   );
 };

@@ -16,7 +16,7 @@ import {
   Trash,
 } from "lucide-react";
 import Paragraph from "../../components/Paragraph";
-import { format, formatRelative } from "date-fns";
+import { formatRelative } from "date-fns";
 import FileActions from "./FileActions";
 
 type FileCardProps = {
@@ -46,7 +46,7 @@ const FileCard: FC<FileCardProps> = ({ file }) => {
           <FileActions file={file} />
         </div>
       </CardHeader>
-      <CardContent className="flex h-48 items-center justify-center">
+      <CardContent className="flex h-48 items-center justify-center ">
         {type === "image" && url && (
           <img src={url} alt={title} className="h-full w-full object-contain" />
         )}

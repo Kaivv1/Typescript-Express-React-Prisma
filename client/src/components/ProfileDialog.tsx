@@ -61,7 +61,7 @@ const ProfileDialog: FC<ProfileDialogProps> = ({ open, onOpen, user }) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpen}>
-      <DialogContent className="max-w-96">
+      <DialogContent className="mx-auto max-w-72 sm:max-w-96">
         <DialogHeader>
           <DialogTitle>Profile</DialogTitle>
           <DialogDescription>Update your user profile</DialogDescription>
@@ -102,7 +102,7 @@ const ProfileDialog: FC<ProfileDialogProps> = ({ open, onOpen, user }) => {
               disabled: isUpdating || isPending,
             })}
           />
-          <DialogFooter>
+          <DialogFooter className="gap-2 sm:gap-0">
             <Button
               type="button"
               disabled={isUpdating || isPending}

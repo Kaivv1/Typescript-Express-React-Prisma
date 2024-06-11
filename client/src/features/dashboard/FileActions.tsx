@@ -87,7 +87,7 @@ const FileActions: FC<FileActionsProps> = ({ file }) => {
   return (
     <>
       <AlertDialog open={isOpenConfirm} onOpenChange={toggleConfirmDialog}>
-        <AlertDialogContent>
+        <AlertDialogContent className="mx-auto max-w-72 sm:max-w-[28rem]">
           <AlertDialogHeader>
             <AlertDialogTitle>
               Are you sure you want to continue this action ?
@@ -135,7 +135,7 @@ const FileActions: FC<FileActionsProps> = ({ file }) => {
       </AlertDialog>
 
       <Dialog open={isOpenRename} onOpenChange={toggleRenameDialog}>
-        <DialogContent className="max-w-96">
+        <DialogContent className="mx-auto max-w-72 sm:max-w-96">
           <DialogHeader>
             <DialogTitle>Rename</DialogTitle>
             <DialogDescription>Add a new title</DialogDescription>

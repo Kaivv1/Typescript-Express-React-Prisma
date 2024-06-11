@@ -47,13 +47,13 @@ const SearchBar = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex gap-2">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex items-center gap-2">
       <Input
         {...register("query", { required: true })}
         placeholder="Search for files..."
       />
-      <Button type="submit" className="gap-1">
-        Search
+      <Button type="submit">
+        <span className="hidden md:block">Search</span>
         <Search className="h-5 w-5" />
       </Button>
     </form>

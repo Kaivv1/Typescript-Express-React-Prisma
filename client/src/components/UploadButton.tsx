@@ -45,13 +45,14 @@ const UploadButton = () => {
   return (
     <Dialog open={isOpen} onOpenChange={() => setIsOpen((isOpen) => !isOpen)}>
       <DialogTrigger asChild>
-        <Button className="gap-1">
-          Upload file <Upload className="h-5 w-5" />
+        <Button>
+          <span className="hidden md:block">Upload file</span>
+          <Upload className="h-5 w-5" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-96">
+      <DialogContent className="mx-auto max-w-72 sm:max-w-96">
         <DialogHeader>
-          <DialogTitle> Upload file</DialogTitle>
+          <DialogTitle>Upload file</DialogTitle>
           <DialogDescription>Choose a name and a file.</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">

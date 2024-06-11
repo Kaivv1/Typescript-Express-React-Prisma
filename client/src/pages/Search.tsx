@@ -7,7 +7,7 @@ const Search = () => {
   return (
     <div>
       <FilesSection
-        title="Search results"
+        title="Search"
         isLoading={isSearching}
         files={searchedFiles!}
       />

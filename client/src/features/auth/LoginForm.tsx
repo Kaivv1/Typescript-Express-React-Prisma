@@ -15,6 +15,7 @@ import { useLogin } from "./useLogin";
 import SocialButton from "@/components/SocialButton";
 import Loader from "@/components/Loader";
 import AuthFooter from "@/components/AuthFooter";
+import Logo from "@/components/Logo";
 
 type LoginFormProps = {
   email: string;
@@ -38,7 +39,9 @@ const LoginForm: FC = (): React.JSX.Element => {
   return (
     <Card className="w-full max-w-96 ">
       <CardHeader>
-        <CardTitle>FileDrive</CardTitle>
+        <CardTitle>
+          <Logo className="text-2xl font-semibold" />
+        </CardTitle>
         <CardDescription>Welcome back to your file storage. 👋🏼</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">

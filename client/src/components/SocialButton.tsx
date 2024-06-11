@@ -26,11 +26,7 @@ const SocialButton: FC<SocialButtonProps> = ({
   }
   return (
     <Link to={`${api}/user/auth/${social}`} className="block">
-      <Button
-        type="button"
-        size="icon"
-        className={cn("w-full gap-2", socialClassName)}
-      >
+      <Button type="button" className={cn("w-full gap-2", socialClassName)}>
         {icon}
         {children}
       </Button>

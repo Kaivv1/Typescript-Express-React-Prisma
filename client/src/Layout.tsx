@@ -25,11 +25,11 @@ const Layout = () => {
     };
   }, []);
   return (
-    <div className="grid min-h-screen grid-cols-[8rem_1fr] grid-rows-[auto_1fr] gap-2 p-2">
+    <div className="grid min-h-screen grid-cols-1 grid-rows-[auto_1fr] gap-2 p-2 md:grid-cols-[8rem_1fr]">
       <Header className="col-span-2 row-start-1" ref={headerRef} />
-      <Sidebar className="col-row-full" />
+      <Sidebar className="hidden md:block" />
       <main
-        className="main-scroll overflow-y-auto rounded-lg border bg-card p-2 text-card-foreground shadow-sm sm:p-4"
+        className="col-span-2 overflow-y-auto rounded-lg border bg-card p-2 text-card-foreground shadow-sm sm:p-4 md:col-span-1"
         style={{ height: `calc(100vh - ${headerHeight}px - (3 * 8px))` }}
       >
         <Outlet />

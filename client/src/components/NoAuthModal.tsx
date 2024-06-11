@@ -25,7 +25,7 @@ const NoAuthModal = ({
   const navigate = useNavigate();
   return (
     <AlertDialog open={open}>
-      <AlertDialogContent>
+      <AlertDialogContent className="mx-auto max-w-72 sm:max-w-[28rem]">
         <AlertDialogHeader>
           <AlertDialogTitle>{msg}</AlertDialogTitle>
           <AlertDialogDescription>{text}</AlertDialogDescription>
