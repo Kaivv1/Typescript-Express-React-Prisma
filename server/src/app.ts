@@ -26,7 +26,7 @@ app.use(
   cors({
     credentials: true,
     origin: [client],
-    methods: ["GET", "POST", "PUT", "DELETE", "HEAD", "PATCH"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   })
 );
 
