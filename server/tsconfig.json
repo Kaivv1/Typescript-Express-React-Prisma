@@ -4,7 +4,7 @@
     // "lib": [],
     "module": "NodeNext",
     "rootDir": "./src",
-    "types": ["randomstring"],
+    "types": [],
     "moduleResolution": "NodeNext",
     "sourceMap": true,
     "outDir": "./dist",
