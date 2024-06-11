@@ -65,7 +65,9 @@ passport.use(localStrategy);
 
 app.use("/user", userRouter);
 app.use("/files", filesRouter);
-
+app.use("/", async (req, res) => {
+  return res.status(200).send("Works");
+});
 app.listen(port, () => console.log(`App running on port ${port}`));
 
 app.use(errorHandler);
