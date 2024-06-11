@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    // "lib": [],
     "module": "NodeNext",
     "rootDir": "./src",
     "types": [],
@@ -11,6 +10,6 @@
     "strict": true,
     "allowUnusedLabels": true
   },
-  "include": ["./src/**/*", "global.d.ts"],
+  "include": ["./**/*.ts", "global.d.ts"],
   "exclude": ["node_modules"]
 }
