@@ -37,22 +37,18 @@ export const localStrategy = new LocalStrategy(
 );
 
 passport.serializeUser((user: ExpressUser, done) => {
-  process.nextTick(() => {
-    return done(null, user.id);
-  });
+  return done(null, user.id);
 });
 
-passport.deserializeUser((user: any, done) => {
-  process.nextTick(async () => {
-    try {
-      const existingUser = await prisma.user.findUnique({
-        where: { id: user },
-      });
-      const { password, ...userWithoutPass } = existingUser as UserData;
+passport.deserializeUser(async (user: any, done) => {
+  try {
+    const existingUser = await prisma.user.findUnique({
+      where: { id: user },
+    });
+    const { password, ...userWithoutPass } = existingUser as UserData;
 
-      return done(null, userWithoutPass);
-    } catch (error) {
-      return done(createError(500, "Error deserializing user"));
-    }
-  });
+    return done(null, userWithoutPass);
+  } catch (error) {
+    return done(createError(500, "Error deserializing user"));
+  }
 });
