@@ -6,10 +6,10 @@
     "types": [],
     "moduleResolution": "NodeNext",
     "sourceMap": true,
-    "outDir": "./dist",
+    "outDir": "dist",
     "strict": true,
     "allowUnusedLabels": true
   },
-  "include": ["./**/*.ts", "global.d.ts"],
+  "include": ["./src/**/*", "global.d.ts"],
   "exclude": ["node_modules"]
 }
