@@ -39,7 +39,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       maxAge: 60 * 60 * 1000,
-      secure: false,
+      secure: "auto",
     },
     store: new PrismaSessionStore(prisma, {
       checkPeriod: 30 * 60 * 1000,
@@ -50,7 +50,6 @@ app.use(
 );
 
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static("static"));
 app.disable("x-powered-by");
 app.use(compression());
 app.use(express.json());

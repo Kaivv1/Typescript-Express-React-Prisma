@@ -16,6 +16,7 @@ import SocialButton from "@/components/SocialButton";
 import Loader from "@/components/Loader";
 import AuthFooter from "@/components/AuthFooter";
 import Logo from "@/components/Logo";
+import { useQueryClient } from "@tanstack/react-query";
 
 type LoginFormProps = {
   email: string;
@@ -30,9 +31,13 @@ const LoginForm: FC = (): React.JSX.Element => {
     formState: { errors },
   } = useForm<LoginFormProps>();
   const { login, isLogging } = useLogin();
+  const queryClient = useQueryClient();
   const onSubmit: SubmitHandler<LoginFormProps> = (data) => {
     login(data, {
-      onSettled: () => reset(),
+      onSettled: () => {
+        queryClient.removeQueries();
+        reset();
+      },
     });
   };
 
