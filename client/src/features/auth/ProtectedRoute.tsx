@@ -1,18 +1,18 @@
-import NoAuthModal from "@/components/NoAuthModal";
+// import NoAuthModal from "@/components/NoAuthModal";
 import { useAuth } from "@/features/auth/useAuth";
 import { Loader } from "lucide-react";
-import { useEffect, useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children }: { children: ReactNode }) => {
-  const [showModal, setShowModal] = useState<boolean>(false);
+  // const [showModal, setShowModal] = useState<boolean>(false);
   const { access, isLoading, msg, text } = useAuth();
 
-  const handleToggleModal = () => setShowModal((open) => !open);
+  // const handleToggleModal = () => setShowModal((open) => !open);
 
-  useEffect(() => {
-    if (access === false) setShowModal(true);
-  }, [access, msg]);
+  // useEffect(() => {
+  //   if (access === false) setShowModal(true);
+  // }, [access, msg]);
 
   if (isLoading)
     return (
@@ -25,14 +25,14 @@ const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   return (
     <>
       {children}
-      {showModal && (
+      {/* {showModal && (
         <NoAuthModal
           msg={msg!}
           text={text}
           open={showModal}
           onOpen={handleToggleModal}
         />
-      )}
+      )} */}
     </>
   );
 };
