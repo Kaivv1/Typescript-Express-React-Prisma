@@ -134,6 +134,7 @@ export const upload: RequestHandler<
     });
 
     const isExisting = userFiles.some((file) => file.title === title);
+    const randomNumber = Math.random();
 
     if (isExisting)
       return next(
@@ -145,14 +146,13 @@ export const upload: RequestHandler<
 
     const { error: bucketError } = await supabase.storage
       .from("files")
-      .upload(title, file.buffer, {
+      .upload(`${title}+${randomNumber}`, file.buffer, {
         contentType: file.mimetype,
       });
 
     if (bucketError)
       return next(createError(500, "Error uploading file to bucket"));
-
-    const fileUrl = `${supabaseUrl}/storage/v1/object/public/files/${title}`;
+    const fileUrl = `${supabaseUrl}/storage/v1/object/public/files/${title}+${randomNumber}`;
     const fileType = getFileType(file);
     await prisma.file
       .create({
@@ -171,7 +171,9 @@ export const upload: RequestHandler<
       })
       .catch(async (error) => {
         if (error) {
-          await supabase.storage.from("files").remove([title]);
+          await supabase.storage
+            .from("files")
+            .remove([`${title}+${randomNumber}`]);
           return next(createError(500, "Error uploading file to database"));
         }
       });
@@ -269,10 +271,14 @@ export const removeAll: RequestHandler<
         },
       })
       .then(async () => {
-        const imageNames = files.map((file) => file.title);
+        const urls = files.map((file) => file.url);
+        let imageTitles: string[] = [];
+        urls.forEach((url) => {
+          imageTitles.push(url.split("/").at(-1) as string);
+        });
         await supabase.storage
           .from("files")
-          .remove(imageNames)
+          .remove(imageTitles)
           .catch((error) => {
             if (error)
               return next(
