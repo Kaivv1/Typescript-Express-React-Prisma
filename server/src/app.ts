@@ -21,7 +21,7 @@ import "./cron-jobs.js";
 
 dotenv.configDotenv();
 const app: Application = express();
-
+app.set("trust proxy", 1);
 app.use(
   cors({
     credentials: true,
@@ -35,10 +35,12 @@ app.use(
     name: "sess",
     secret: process.env.COOKIE_SECRET!,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
+    proxy: true,
     cookie: {
       maxAge: 60 * 60 * 1000,
-      secure: false,
+      secure: true,
+      sameSite: "none",
     },
     store: new PrismaSessionStore(prisma, {
       checkPeriod: 30 * 60 * 1000,
