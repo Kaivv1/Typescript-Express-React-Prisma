@@ -30,6 +30,7 @@ app.use(
   })
 );
 
+const isProduction = process.env.NODE_ENV === "production";
 app.use(
   session({
     name: "sess",
@@ -39,7 +40,8 @@ app.use(
     saveUninitialized: false,
     cookie: {
       maxAge: 60 * 60 * 1000,
-      secure: true,
+      secure: isProduction,
+      sameSite: "lax",
     },
     store: new PrismaSessionStore(prisma, {
       checkPeriod: 30 * 60 * 1000,
@@ -67,8 +69,7 @@ app.use("/files", filesRouter);
 app.use("/", (req, res) => {
   return res.status(200).json({ msg: "Hello" });
 });
-const isProduction = process.env.NODE_ENV === "production";
-console.log(isProduction);
+
 app.listen(port, () => console.log(`App running on port ${port}`));
 
 app.use(errorHandler);
