@@ -14,7 +14,8 @@ export const githubStrategy = new GitHubStrategy(
   {
     clientID: process.env.GITHUB_CLIENT_ID!,
     clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-    callbackURL: "http://localhost:4000/user/auth/github/callback",
+    callbackURL:
+      "https://file-drive-api.onrender.com/user/auth/github/callback",
   },
   async function (
     accessToken: any,
@@ -49,7 +50,8 @@ export const googleStrategy = new GoogleStrategy(
   {
     clientID: process.env.GOOGLE_CLIENT_ID!,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    callbackURL: "http://localhost:4000/user/auth/google/callback",
+    callbackURL:
+      "https://file-drive-api.onrender.com/user/auth/google/callback",
     passReqToCallback: true,
   },
   async (request, accessToken, refreshToken, profile, done) => {
